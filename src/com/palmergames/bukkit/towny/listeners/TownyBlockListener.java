@@ -75,9 +75,14 @@ public class TownyBlockListener implements Listener {
 		 */
 		if (cache.getStatus() == TownBlockStatus.ENEMY) {
 			player.damage(TownyWarConfig.getGriefingDamage);
-			TownyMessaging.sendMsg("It is painful to break blocks in enemy territory");
+			TownyMessaging.sendMsg(player, "It is painful to place blocks in enemy territory");
+		}
+		else if (status == TownBlockStatus.WARZONE) {
+			if (!TownyWarConfig.isEditableMaterialInWarZone(block.getType())) {
+				event.setBuild(false);
+				event.setCancelled(true);
+				TownyMessaging.sendErrorMsg(player, String.format(TownySettings.getLangString("msg_err_warzone_cannot_edit_material"), "build", block.getType().toString().toLowerCase()));
 			}
-			return;
 		}
 
 		/*
@@ -139,13 +144,14 @@ public class TownyBlockListener implements Listener {
 			/*
 			 * Allow placing of blocks on enemy town blocks
 			 */
-			if (cache.getStatus() == TownBlockStatus.ENEMY) {
-				player.damage(TownyWarConfig.getGriefingDamage);
-				TownyMessaging.sendMsg("It is painful to place blocks in enemy territory");
+
+		if (cache.getStatus() == TownBlockStatus.ENEMY) {
+			player.damage(TownyWarConfig.getGriefingDamage);
+			TownyMessaging.sendMsg(player, "It is painful to break blocks in enemy territory");
 			}
 			return;
 		}
-			/* 
+
 			 * display any error recorded for this plot
 			 */
 			if ((cache.hasBlockErrMsg()) && (event.isCancelled()))

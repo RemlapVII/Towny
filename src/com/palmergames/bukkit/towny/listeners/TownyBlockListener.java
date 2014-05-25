@@ -74,7 +74,7 @@ public class TownyBlockListener implements Listener {
 		 * Allow destruction of enemy town blocks
 		 */
 		if (cache.getStatus() == TownBlockStatus.ENEMY) {
-			player.damage(1);
+			player.damage(TownyWarConfig.getGriefingDamage);
 			TownyMessaging.sendErrorMsg(player, "It is painful to break blocks in enemy territory");
 			}
 			return;
@@ -140,7 +140,7 @@ public class TownyBlockListener implements Listener {
 			 * Allow placing of blocks on enemy town blocks
 			 */
 			if (cache.getStatus() == TownBlockStatus.ENEMY) {
-				player.damage(1);
+				player.damage(TownyWarConfig.getGriefingDamage);
 				TownyMessaging.sendErrorMsg(player, "It is painful to place blocks in enemy territory");
 			}
 			return;

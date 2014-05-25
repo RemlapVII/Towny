@@ -71,12 +71,11 @@ public class TownyBlockListener implements Listener {
 		PlayerCache cache = plugin.getCache(player);
 
 		/*
-		 * Allow destroy in a WarZone (FlagWar) if it's an editable material.
+		 * Allow destruction of enemy town blocks
 		 */
-		if (cache.getStatus() == TownBlockStatus.WARZONE) {
-			if (!TownyWarConfig.isEditableMaterialInWarZone(block.getType())) {
-				event.setCancelled(true);
-				TownyMessaging.sendErrorMsg(player, String.format(TownySettings.getLangString("msg_err_warzone_cannot_edit_material"), "destroy", block.getType().toString().toLowerCase()));
+		if (cache.getStatus() == TownBlockStatus.ENEMY) {
+			player.damage(1);
+			TownyMessaging.sendErrorMsg(player, "It is painful to break blocks in enemy territory");
 			}
 			return;
 		}
@@ -138,32 +137,14 @@ public class TownyBlockListener implements Listener {
 			TownBlockStatus status = cache.getStatus();
 
 			/*
-			 * Flag war
+			 * Allow placing of blocks on enemy town blocks
 			 */
-			if (((status == TownBlockStatus.ENEMY) && TownyWarConfig.isAllowingAttacks()) && (event.getBlock().getType() == TownyWarConfig.getFlagBaseMaterial())) {
-
-				try {
-					if (TownyWar.callAttackCellEvent(plugin, player, block, worldCoord))
-						return;
-				} catch (TownyException e) {
-					TownyMessaging.sendErrorMsg(player, e.getMessage());
-				}
-
-				event.setBuild(false);
-				event.setCancelled(true);
-
-			} else if (status == TownBlockStatus.WARZONE) {
-				if (!TownyWarConfig.isEditableMaterialInWarZone(block.getType())) {
-					event.setBuild(false);
-					event.setCancelled(true);
-					TownyMessaging.sendErrorMsg(player, String.format(TownySettings.getLangString("msg_err_warzone_cannot_edit_material"), "build", block.getType().toString().toLowerCase()));
-				}
-				return;
-			} else {
-				event.setBuild(false);
-				event.setCancelled(true);
+			if (cache.getStatus() == TownBlockStatus.ENEMY) {
+				player.damage(1);
+				TownyMessaging.sendErrorMsg(player, "It is painful to place blocks in enemy territory");
 			}
-
+			return;
+		}
 			/* 
 			 * display any error recorded for this plot
 			 */

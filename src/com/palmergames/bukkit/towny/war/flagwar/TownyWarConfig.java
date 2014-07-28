@@ -125,6 +125,16 @@ public class TownyWarConfig {
 
 		return TownyWarConfig.editableMaterialsInWarZone.contains(material);
 	}
+	
+	public static void setGriefingDamage(int griefingInput) {
+
+		int griefingDamage = griefingInput;
+	}
+
+	public static void getGriefingDamage() {
+
+		return griefingDamage;
+	}
 
 	public static boolean isAllowingSwitchesInWarZone() {
 
